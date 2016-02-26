@@ -1,9 +1,9 @@
 with Ada.Text_IO, Ada.Integer_Text_IO;
 use Ada.Text_IO, Ada.Integer_Text_IO;
-
+with quicksort;
+use quicksort;
 procedure Main is
-	subtype int is integer range 0..1000;
-	A: array(1..30) of int;
+	A: quicksort.myarray;
 
 
    task PrintTask is
@@ -15,14 +15,15 @@ procedure Main is
    end addTask;
 	
 	task readTask;
-	
+	task sortTask is
+		entry sortArray;
+	end sortTask;
 	task body readTask is
 	begin
 		for i in 1..30 loop
 			get(A(i));
 		end loop;
 		printTask.printArray;
-		addtask.addArray;
    end readTask;
    task body printTask is
    begin
@@ -34,6 +35,15 @@ procedure Main is
 			end loop;
 		end printArray;
 		New_line;
+		sortTask.sortArray;
+		put_line("Printing sorted array");	
+		accept printArray do
+			for i in 1..30 loop
+				put(A(i));
+				new_line;
+			end loop;
+		end printArray;
+
          accept printSum(sum: Integer) do
             Put("Sum of the array is");
             Put(Sum);
@@ -53,6 +63,15 @@ procedure Main is
 	    printTask.printSum(sum);
    	end addArray;
    end addTask;
+   task body sortTask is
+   begin
+   		accept sortArray do
+		quicksort.quicksort(1,30,A);
+		end sortArray;
+		printTask.printarray;
+		addtask.addArray;
+	end sortTask;
 begin
- null;
+null;
+-- quicksort.quicksort(1,30);
 end Main;
